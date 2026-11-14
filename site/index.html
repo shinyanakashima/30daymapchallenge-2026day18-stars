@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Null Light, Stars</title>
+<meta name="description" content="Japan drawn only with stars: the darker the night, the more stars. #30DayMapChallenge 2026 Day 18 NULL.">
+<meta property="og:title" content="Where the light is null, the stars appear.">
+<meta property="og:description" content="Japan drawn only with stars, from NASA Black Marble night lights.">
+<meta property="og:image" content="screenshot.png">
+<meta name="theme-color" content="#000000">
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="map" aria-label="Map of Japan drawn with stars"></div>
+
+<header id="panel">
+  <div class="head">
+    <div>
+      <p class="kicker">#30DayMapChallenge 2026 · Day 18 · NULL</p>
+      <h1 data-i18n="title">Where the light is null, the stars appear.</h1>
+    </div>
+    <button id="collapse" class="icon-btn" aria-expanded="true" aria-controls="panel-body" data-i18n-aria="collapse">–</button>
+  </div>
+  <div id="panel-body">
+    <p class="lead" data-i18n="lead"></p>
+    <div class="row controls">
+      <div class="lang" role="group" aria-label="Language">
+        <button data-lang="en" aria-pressed="true">EN</button>
+        <button data-lang="ja" aria-pressed="false">日本語</button>
+      </div>
+      <label class="toggle"><input type="checkbox" id="overlay"> <span data-i18n="overlay"></span></label>
+    </div>
+
+    <h2 data-i18n="legendTitle"></h2>
+    <ol id="legend"></ol>
+
+    <h2 data-i18n="placesTitle"></h2>
+    <ul id="places"></ul>
+
+    <details id="about">
+      <summary data-i18n="aboutTitle"></summary>
+      <div data-i18n-html="about"></div>
+    </details>
+  </div>
+</header>
+
+<aside id="info" hidden aria-live="polite">
+  <button id="info-close" class="icon-btn" aria-label="Close">×</button>
+  <div id="info-body"></div>
+</aside>
+
+<footer id="credit">
+  <span data-i18n="notesShort"></span>
+  <span class="src" data-i18n="source"></span>
+</footer>
+
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

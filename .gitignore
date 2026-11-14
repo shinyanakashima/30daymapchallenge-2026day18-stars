@@ -1,0 +1,7 @@
+data/raw/
+site/tiles/
+__pycache__/
+node_modules/
+.netrc
+.env
+*.h5
