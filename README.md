@@ -4,9 +4,9 @@
 
 #30DayMapChallenge 2026 Day 18「NULL」
 
-Japan drawn only with stars. The darker the night around a place, the more stars it gets; bright cities become empty patches. There are no place names: the coast and the cities show through the density of stars alone.
+Japan drawn only with stars. The darker the night around a place, the more stars it gets; bright cities become empty patches. Turn off the borders and names to see the coast and the cities emerge from the density of stars alone.
 
-日本を星だけで描いた地図です。夜の明かりが少ない場所ほど星を多く、明るい街ほど少なく描いています。地名は載せていないので、星の濃淡だけで日本の形と街の位置が分かります。
+日本を星だけで描いた地図です。夜の明かりが少ない場所ほど星を多く、明るい街ほど少なく描いています。境界線と地名を消すと、星の濃淡だけで日本の形と街の位置が分かります。
 
 **公開URL:** https://shinyanakashima.github.io/30daymapchallenge-2026day18-stars/
 
@@ -16,7 +16,7 @@ Japan drawn only with stars. The darker the night around a place, the more stars
 
 - 英語表記が標準で、日本語に切り替えられます（`?lang=ja` でも開けます）。
 - 明るい星の一部が瞬きます（「Twinkle / 瞬き」で止められます。動きを減らす設定の端末では最初から止まっています）。
-- 「Cities and coastline / 都市名と海岸線」で、主な都市名と海岸線をうすく重ねられます。
+- 主な都市名、海岸線、都道府県境を重ねて表示します（最初から表示。「Cities, coastline and prefecture borders / 都市名・海岸線・都道府県境」で消せます）。都市名はズームに合わせて数を増やします。
 - 地図をクリックすると、その地点の段階と、描いた星の数の目安（10km四方あたり）を表示します。
 - 陸別町（十勝）、阿智村、美星町、屋久島、西表島・石垣島の5か所を紹介しています。
 - スマートフォンでは、説明パネルが画面下にたためる形で表示されます。
@@ -53,7 +53,7 @@ Japan drawn only with stars. The darker the night around a place, the more stars
 ## データの出典
 
 - **夜間光**: NASA Black Marble VNP46A4（VIIRS/NPP Lunar BRDF-Adjusted Nighttime Lights Yearly L3 Global 15 arc-second Linear Lat Lon Grid, Collection 2）、2025年。NASA LAADS DAAC から取得。パブリックドメイン。
-- **海岸線・国境・都市**: [Natural Earth](https://www.naturalearthdata.com/) 1:10m（Admin 0 Countries、Admin 1 States and Provinces、Populated Places）。パブリックドメイン。
+- **海岸線・都道府県境・都市**: [Natural Earth](https://www.naturalearthdata.com/) 1:10m（Admin 0 Countries、Admin 1 States and Provinces、Admin 1 States and Provinces Lines、Populated Places）。パブリックドメイン。
 - **地図表示**: [MapLibre GL JS](https://maplibre.org/) 4.7.1。
 
 ## 再現手順

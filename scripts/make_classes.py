@@ -5,6 +5,7 @@ Outputs
   data/processed/meta.json       grid, thresholds, statistics
   site/data/sky_class.png        1/2 resolution lookup image for the web page
   site/data/coastline.geojson    Japan outline (Natural Earth)
+  site/data/prefectures.geojson  prefecture boundaries (Natural Earth)
   site/data/cities.geojson       main cities (Natural Earth)
 """
 import json
@@ -169,6 +170,18 @@ def main():
                               geometry=dict(type="LineString",
                                             coordinates=[[round(x, 4), round(y, 4)] for x, y in ring])))
     (SITE / "coastline.geojson").write_text(json.dumps(dict(type="FeatureCollection", features=feats)))
+
+    # prefecture boundaries
+    feats = []
+    for r, shp in records(NE / "ne_10m_admin_1_states_provinces_lines/ne_10m_admin_1_states_provinces_lines.shp"):
+        if r["ADM0_A3"] != "JPN":
+            continue
+        for ring in rings(shp):
+            if len(ring) >= 2:
+                feats.append(dict(type="Feature", properties={},
+                                  geometry=dict(type="LineString",
+                                                coordinates=[[round(x, 4), round(y, 4)] for x, y in ring])))
+    (SITE / "prefectures.geojson").write_text(json.dumps(dict(type="FeatureCollection", features=feats)))
 
     cities = {}
     for r, shp in records(NE / "ne_10m_populated_places/ne_10m_populated_places.shp"):

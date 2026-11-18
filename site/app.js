@@ -4,8 +4,8 @@
   const T = {
     en: {
       title: "Where the light is null, the stars appear.",
-      lead: "Japan drawn only with stars. The darker the night around a place, the more stars it gets; bright cities become empty patches. There are no place names: the coast and the cities show through the density of stars alone.",
-      overlay: "Cities and coastline",
+      lead: "Japan drawn only with stars. The darker the night around a place, the more stars it gets; bright cities become empty patches. Turn off the borders and names to see the coast and the cities emerge from the density of stars alone.",
+      overlay: "Cities, coastline and prefecture borders",
       twinkle: "Twinkle",
       legendTitle: "Night-sky classes",
       legendHint: "Stars drawn per 10 × 10 km",
@@ -26,14 +26,14 @@
         <ul>
           <li>Star counts are rough figures set from night lights. They are not a calculation of the stars you can actually see.</li>
           <li>Clouds, moonlight and seasons are not taken into account.</li>
-          <li>Sources: NASA Black Marble (VNP46A4, annual composite, ${"{year}"}); Natural Earth (coastline, cities). Both are in the public domain.</li>
+          <li>Sources: NASA Black Marble (VNP46A4, annual composite, ${"{year}"}); Natural Earth (coastline, prefecture borders, cities). Both are in the public domain.</li>
         </ul>
         <p><a href="https://github.com/shinyanakashima/30daymapchallenge-2026day18-stars" target="_blank" rel="noopener">Source code and method</a></p>`,
     },
     ja: {
       title: "光がない場所に、星が現れる。",
-      lead: "日本を星だけで描きました。夜の明かりが少ない場所ほど星を多く、明るい街ほど少なく描いています。地名はありません。星の濃淡だけで、海岸線と街の位置が浮かび上がります。",
-      overlay: "都市名と海岸線",
+      lead: "日本を星だけで描きました。夜の明かりが少ない場所ほど星を多く、明るい街ほど少なく描いています。境界線と地名を消すと、星の濃淡だけで海岸線と街の位置が浮かび上がります。",
+      overlay: "都市名・海岸線・都道府県境",
       twinkle: "瞬き",
       legendTitle: "夜空の段階",
       legendHint: "10km四方に描いた星の数",
@@ -54,7 +54,7 @@
         <ul>
           <li>星の数は夜の明かりから決めた目安で、実際に見える星の数を計算したものではありません。</li>
           <li>雲、月明かり、季節は考慮していません。</li>
-          <li>出典: NASA Black Marble（VNP46A4 年合成、${"{year}"}年）、Natural Earth（海岸線、都市）。いずれもパブリックドメインです。</li>
+          <li>出典: NASA Black Marble（VNP46A4 年合成、${"{year}"}年）、Natural Earth（海岸線、都道府県境、都市）。いずれもパブリックドメインです。</li>
         </ul>
         <p><a href="https://github.com/shinyanakashima/30daymapchallenge-2026day18-stars" target="_blank" rel="noopener">ソースコードと処理の方法</a></p>`,
     },
@@ -101,6 +101,7 @@
           attribution: "Night lights: <a href=\"https://blackmarble.gsfc.nasa.gov/\" target=\"_blank\" rel=\"noopener\">NASA Black Marble</a> · <a href=\"https://www.naturalearthdata.com/\" target=\"_blank\" rel=\"noopener\">Natural Earth</a>",
         },
         coast: { type: "geojson", data: "data/coastline.geojson" },
+        prefs: { type: "geojson", data: "data/prefectures.geojson" },
         twinkle: { type: "geojson", data: "tiles/twinkle.geojson" },
       },
       layers: [
@@ -115,8 +116,11 @@
             "circle-opacity": 0.6,
           },
         })),
+        { id: "prefs", type: "line", source: "prefs", layout: { visibility: "none", "line-join": "round" },
+          paint: { "line-color": "#b8c8ff", "line-opacity": ["interpolate", ["linear"], ["zoom"], 4, 0.6, 8, 0.75],
+            "line-width": ["interpolate", ["linear"], ["zoom"], 4, 0.9, 9, 1.6], "line-dasharray": [2.5, 1.5] } },
         { id: "coast", type: "line", source: "coast", layout: { visibility: "none" },
-          paint: { "line-color": "#9fb4ff", "line-opacity": 0.28, "line-width": 0.6 } },
+          paint: { "line-color": "#9fb4ff", "line-opacity": 0.5, "line-width": ["interpolate", ["linear"], ["zoom"], 4, 0.7, 9, 1.2] } },
       ],
     },
     bounds: [[122.9, 24.0], [146.2, 45.6]],
@@ -138,14 +142,26 @@
       el.className = "city";
       el.dataset.en = f.properties.en;
       el.dataset.ja = f.properties.ja;
+      el.dataset.rank = f.properties.rank;
       el.textContent = f.properties[lang];
       cityMarkers.push(new maplibregl.Marker({ element: el, anchor: "left" }).setLngLat(f.geometry.coordinates));
     });
     setOverlay(document.getElementById("overlay").checked);
+    thinCities();
   });
 
+  // fewer city names when zoomed out
+  function thinCities() {
+    const z = map.getZoom();
+    const maxRank = z < 4.2 ? 2 : z < 5.5 ? 4 : 99;
+    cityMarkers.forEach((m) => { m.getElement().style.display = Number(m.getElement().dataset.rank) <= maxRank ? "" : "none"; });
+  }
+  map.on("zoomend", thinCities);
+
   function setOverlay(on) {
-    if (map.getLayer("coast")) map.setLayoutProperty("coast", "visibility", on ? "visible" : "none");
+    ["coast", "prefs"].forEach((id) => {
+      if (map.getLayer(id)) map.setLayoutProperty(id, "visibility", on ? "visible" : "none");
+    });
     cityMarkers.forEach((m) => (on ? m.addTo(map) : m.remove()));
   }
 

@@ -29,6 +29,7 @@ NE = {
     "admin0": "https://naciscdn.org/naturalearth/10m/cultural/ne_10m_admin_0_countries.zip",
     "admin1": "https://naciscdn.org/naturalearth/10m/cultural/ne_10m_admin_1_states_provinces.zip",
     "places": "https://naciscdn.org/naturalearth/10m/cultural/ne_10m_populated_places.zip",
+    "admin1_lines": "https://naciscdn.org/naturalearth/10m/cultural/ne_10m_admin_1_states_provinces_lines.zip",
 }
 
 
