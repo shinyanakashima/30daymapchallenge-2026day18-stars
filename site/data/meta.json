@@ -1,0 +1,94 @@
+{
+ "year": 2025,
+ "bbox": {
+  "west": 122.5,
+  "south": 24.0,
+  "east": 149.0,
+  "north": 46.0
+ },
+ "lookup_px_per_deg": 120.0,
+ "lookup_scale": 40,
+ "classes": [
+  {
+   "id": 1,
+   "max_rad": 0.5,
+   "bortle": "1-2",
+   "visible": 4000,
+   "visible_range": "3,000-5,000"
+  },
+  {
+   "id": 2,
+   "max_rad": 1.5,
+   "bortle": "3",
+   "visible": 2500,
+   "visible_range": "2,000-3,000"
+  },
+  {
+   "id": 3,
+   "max_rad": 4.0,
+   "bortle": "4",
+   "visible": 1200,
+   "visible_range": "1,000-1,500"
+  },
+  {
+   "id": 4,
+   "max_rad": 10.0,
+   "bortle": "5",
+   "visible": 500,
+   "visible_range": "400-700"
+  },
+  {
+   "id": 5,
+   "max_rad": 30.0,
+   "bortle": "6-7",
+   "visible": 200,
+   "visible_range": "100-300"
+  },
+  {
+   "id": 6,
+   "max_rad": null,
+   "bortle": "8-9",
+   "visible": 30,
+   "visible_range": "20-50"
+  }
+ ],
+ "stats": [
+  {
+   "id": 1,
+   "area_km2": 230573,
+   "share": 0.613,
+   "stars": 922293
+  },
+  {
+   "id": 2,
+   "area_km2": 70518,
+   "share": 0.1875,
+   "stars": 176295
+  },
+  {
+   "id": 3,
+   "area_km2": 42181,
+   "share": 0.1121,
+   "stars": 50617
+  },
+  {
+   "id": 4,
+   "area_km2": 21940,
+   "share": 0.0583,
+   "stars": 10970
+  },
+  {
+   "id": 5,
+   "area_km2": 8843,
+   "share": 0.0235,
+   "stars": 1769
+  },
+  {
+   "id": 6,
+   "area_km2": 2114,
+   "share": 0.0056,
+   "stars": 63
+  }
+ ],
+ "stars_per_km2_per_visible": 0.001
+}

@@ -10,6 +10,7 @@ import argparse
 import json
 import os
 import sys
+import time
 import urllib.request
 import zipfile
 from pathlib import Path
@@ -19,7 +20,8 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 RAW = ROOT / "data" / "raw"
-LADS = "https://ladsweb.modaps.eosdis.nasa.gov/archive/allData/5200/VNP46A4"
+CMR = ("https://cmr.earthdata.nasa.gov/search/granules.json?short_name=VNP46A4&version=2"
+       "&temporal={y}-01-01T00:00:00Z,{y}-12-31T23:59:59Z&bounding_box=120,20,150,50&page_size=100")
 # 10x10 degree Black Marble tiles covering Japan (lon 120-150E, lat 20-50N)
 TILES = [f"h{h}v{v:02d}" for v in (4, 5, 6) for h in (30, 31, 32)]
 LAYER = "AllAngle_Composite_Snow_Free"
@@ -58,26 +60,43 @@ def fetch_blackmarble(year):
         sys.exit("EARTHDATA_TOKEN is not set")
     out = RAW / "blackmarble" / str(year)
     out.mkdir(parents=True, exist_ok=True)
-    with urllib.request.urlopen(f"{LADS}/{year}/001.json") as r:
-        listing = json.load(r)["content"]
+    with urllib.request.urlopen(CMR.format(y=year)) as r:
+        entries = json.load(r)["feed"]["entry"]
+    urls = [l["href"] for e in entries for l in e["links"]
+            if l["href"].startswith("https://") and l["href"].endswith(".h5")
+            and f".A{year}001." in l["href"]]
     for tile in TILES:
         npy = out / f"{tile}.npy"
         if npy.exists():
             continue
-        names = [c["name"] for c in listing if f".{tile}." in c["name"]]
-        if not names:
+        hits = [u for u in urls if f".{tile}." in u]
+        if not hits:
             print("missing tile", tile)
             continue
-        h5 = out / names[0]
-        print("download", names[0])
-        get(f"{LADS}/{year}/001/{names[0]}", h5, token)
+        name = hits[0].rsplit("/", 1)[1]
+        h5 = out / name
+        if not h5.exists():
+            print("download", name)
+            for attempt in range(4):
+                try:
+                    get(hits[0], h5.with_suffix(".part"), token)
+                    h5.with_suffix(".part").rename(h5)
+                    break
+                except OSError as e:
+                    print("  retry:", e)
+                    time.sleep(2 ** (attempt + 1))
+            else:
+                sys.exit(f"download failed: {name}")
         with h5py.File(h5, "r") as f:
             ds = f[f"HDFEOS/GRIDS/VIIRS_Grid_DNB_2d/Data Fields/{LAYER}"]
             raw = ds[()].astype(np.float32)
-            fill = float(np.ravel(ds.attrs.get("_FillValue", [65535]))[0])
+            fill = np.float32(np.ravel(ds.attrs.get("_FillValue", [-999.9]))[0])
             scale = float(np.ravel(ds.attrs.get("scale_factor", [1.0]))[0])
-            offset = float(np.ravel(ds.attrs.get("add_offset", [0.0]))[0])
-        rad = np.where(raw == fill, np.nan, raw * scale + offset).astype(np.float32)
+            offset = float(np.ravel(ds.attrs.get("offset", ds.attrs.get("add_offset", [0.0])))[0])
+            lat = f["HDFEOS/GRIDS/VIIRS_Grid_DNB_2d/Data Fields/lat"][()]
+        assert lat[0] > lat[-1], "expected north-up rows"
+        bad = (raw == fill) | (raw < 0)
+        rad = np.where(bad, np.nan, raw * scale + offset).astype(np.float32)
         np.save(npy, rad)
         h5.unlink()
 

@@ -27,7 +27,7 @@ KM_PER_PX_LAT = 111.32 / C.PX_PER_DEG
 
 CITIES = ["Sapporo", "Asahikawa", "Hakodate", "Obihiro", "Kushiro", "Aomori", "Morioka",
           "Akita", "Sendai", "Niigata", "Tokyo", "Yokohama", "Nagano", "Kanazawa", "Shizuoka",
-          "Nagoya", "Kyoto", "Ōsaka", "Kōbe", "Okayama", "Hiroshima", "Matsuyama", "Kochi",
+          "Nagoya", "Kyoto", "Ōsaka", "Kōbe", "Okayama", "Hiroshima", "Matsuyama", "Kōchi",
           "Fukuoka", "Kumamoto", "Kagoshima", "Naha"]
 
 

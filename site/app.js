@@ -62,15 +62,15 @@
     { id: "rikubetsu", lon: 143.7385, lat: 43.4683, z: 8.6,
       en: ["Rikubetsu, Tokachi", "The \"town of stars\" in eastern Hokkaido, home to the Ginga-no-Mori observatory."],
       ja: ["陸別町（十勝）", "「星空の町」。銀河の森天文台がある、北海道東部の町。"] },
-    { id: "achi", lon: 137.7470, lat: 35.4430, z: 8.6,
+    { id: "achi", lon: 137.7300, lat: 35.4100, z: 8.6,
       en: ["Achi, Nagano", "A mountain village in southern Nagano known for its starry nights."],
       ja: ["阿智村（長野県）", "星空で知られる、長野県南部の山あいの村。"] },
     { id: "bisei", lon: 133.5600, lat: 34.6750, z: 8.8,
       en: ["Bisei, Okayama", "Passed one of Japan's first ordinances against light pollution, in 1989."],
       ja: ["美星町（岡山県井原市）", "1989年に全国でも早く光害防止の条例をつくった町。"] },
-    { id: "kozushima", lon: 139.1370, lat: 34.2110, z: 9.2,
-      en: ["Kozushima, Tokyo", "An island in the Izu chain, certified as a Dark Sky Place."],
-      ja: ["神津島（東京都）", "伊豆諸島の島。星空保護区に認定されています。"] },
+    { id: "yakushima", lon: 130.5300, lat: 30.3500, z: 8.6,
+      en: ["Yakushima, Kagoshima", "An island south of Kyushu, mostly mountains and forest with very few lights."],
+      ja: ["屋久島（鹿児島県）", "九州の南の島。大半が山と森で、夜の明かりがほとんどありません。"] },
     { id: "iriomote", lon: 123.8100, lat: 24.3300, z: 8.6,
       en: ["Iriomote and Ishigaki, Okinawa", "Japan's first Dark Sky Park, at the southwestern end of the country."],
       ja: ["西表島・石垣島（沖縄県）", "日本で最初に星空保護区に認定された、国内の南西の端。"] },
@@ -113,7 +113,7 @@
       : { top: 30, bottom: 40, left: 370, right: 30 } },
     minZoom: 3, maxZoom: 12,
     attributionControl: { compact: true },
-    dragRotate: false, pitchWithRotate: false,
+    dragRotate: false, pitchWithRotate: false, hash: true,
   });
   map.touchZoomRotate.disableRotation();
   map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "bottom-right");

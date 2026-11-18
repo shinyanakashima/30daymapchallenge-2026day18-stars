@@ -20,11 +20,11 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "site" / "tiles"
 T = C.TILE_PX
 M = 6  # margin so stars on tile edges continue into the next tile
-ZOOM_FRACTION = 0.5
+ZOOM_FRACTION = 0.43
 KM_PER_PX_LAT = 111.32 / C.PX_PER_DEG
 
 # (upper bound of local rank, sigma px, peak) - brighter tiers are rarer
-TIERS = [(0.012, 1.25, 255.0), (0.07, 0.85, 225.0), (0.28, 0.6, 165.0), (1.0, 0.0, 95.0)]
+TIERS = [(0.012, 1.25, 255.0), (0.07, 0.85, 225.0), (0.28, 0.6, 165.0), (1.0, 0.0, 120.0)]
 
 
 def sprite(sigma):

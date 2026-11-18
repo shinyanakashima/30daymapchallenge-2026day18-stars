@@ -1,0 +1,391 @@
+{
+ "year": 2025,
+ "layer": "VNP46A4 AllAngle_Composite_Snow_Free",
+ "bbox": {
+  "west": 122.5,
+  "south": 24.0,
+  "east": 149.0,
+  "north": 46.0
+ },
+ "px_per_deg": 240,
+ "width": 6360,
+ "height": 5280,
+ "blur_sigma_km": 6.0,
+ "blur_radius_km": 15.0,
+ "classes": [
+  {
+   "id": 1,
+   "max_rad": 0.5,
+   "bortle": "1-2",
+   "visible": 4000,
+   "visible_range": "3,000-5,000"
+  },
+  {
+   "id": 2,
+   "max_rad": 1.5,
+   "bortle": "3",
+   "visible": 2500,
+   "visible_range": "2,000-3,000"
+  },
+  {
+   "id": 3,
+   "max_rad": 4.0,
+   "bortle": "4",
+   "visible": 1200,
+   "visible_range": "1,000-1,500"
+  },
+  {
+   "id": 4,
+   "max_rad": 10.0,
+   "bortle": "5",
+   "visible": 500,
+   "visible_range": "400-700"
+  },
+  {
+   "id": 5,
+   "max_rad": 30.0,
+   "bortle": "6-7",
+   "visible": 200,
+   "visible_range": "100-300"
+  },
+  {
+   "id": 6,
+   "max_rad": null,
+   "bortle": "8-9",
+   "visible": 30,
+   "visible_range": "20-50"
+  }
+ ],
+ "stats": [
+  {
+   "id": 1,
+   "area_km2": 230573,
+   "share": 0.613,
+   "stars": 922293
+  },
+  {
+   "id": 2,
+   "area_km2": 70518,
+   "share": 0.1875,
+   "stars": 176295
+  },
+  {
+   "id": 3,
+   "area_km2": 42181,
+   "share": 0.1121,
+   "stars": 50617
+  },
+  {
+   "id": 4,
+   "area_km2": 21940,
+   "share": 0.0583,
+   "stars": 10970
+  },
+  {
+   "id": 5,
+   "area_km2": 8843,
+   "share": 0.0235,
+   "stars": 1769
+  },
+  {
+   "id": 6,
+   "area_km2": 2114,
+   "share": 0.0056,
+   "stars": 63
+  }
+ ],
+ "land_km2": 376169,
+ "sky_percentiles": {
+  "5": 0.01,
+  "25": 0.074,
+  "50": 0.272,
+  "75": 1.043,
+  "90": 3.411,
+  "95": 6.445,
+  "99": 22.087
+ },
+ "prefectures": [
+  {
+   "en": "Kōchi",
+   "ja": "高知県",
+   "stars_per_km2": 3.699,
+   "darkest_share": 0.855
+  },
+  {
+   "en": "Miyazaki",
+   "ja": "宮崎県",
+   "stars_per_km2": 3.668,
+   "darkest_share": 0.819
+  },
+  {
+   "en": "Hokkaidō",
+   "ja": "北海道",
+   "stars_per_km2": 3.653,
+   "darkest_share": 0.832
+  },
+  {
+   "en": "Akita",
+   "ja": "秋田県",
+   "stars_per_km2": 3.65,
+   "darkest_share": 0.786
+  },
+  {
+   "en": "Iwate",
+   "ja": "岩手県",
+   "stars_per_km2": 3.623,
+   "darkest_share": 0.792
+  },
+  {
+   "en": "Shimane",
+   "ja": "島根県",
+   "stars_per_km2": 3.605,
+   "darkest_share": 0.79
+  },
+  {
+   "en": "Kagoshima",
+   "ja": "鹿児島県",
+   "stars_per_km2": 3.531,
+   "darkest_share": 0.74
+  },
+  {
+   "en": "Tottori",
+   "ja": "鳥取県",
+   "stars_per_km2": 3.529,
+   "darkest_share": 0.75
+  },
+  {
+   "en": "Ōita",
+   "ja": "大分県",
+   "stars_per_km2": 3.413,
+   "darkest_share": 0.709
+  },
+  {
+   "en": "Tokushima",
+   "ja": "徳島県",
+   "stars_per_km2": 3.397,
+   "darkest_share": 0.721
+  },
+  {
+   "en": "Ehime",
+   "ja": "愛媛県",
+   "stars_per_km2": 3.368,
+   "darkest_share": 0.699
+  },
+  {
+   "en": "Yamagata",
+   "ja": "山形県",
+   "stars_per_km2": 3.332,
+   "darkest_share": 0.637
+  },
+  {
+   "en": "Aomori",
+   "ja": "青森県",
+   "stars_per_km2": 3.283,
+   "darkest_share": 0.632
+  },
+  {
+   "en": "Nagano",
+   "ja": "長野県",
+   "stars_per_km2": 3.278,
+   "darkest_share": 0.62
+  },
+  {
+   "en": "Wakayama",
+   "ja": "和歌山県",
+   "stars_per_km2": 3.26,
+   "darkest_share": 0.659
+  },
+  {
+   "en": "Fukushima",
+   "ja": "福島県",
+   "stars_per_km2": 3.248,
+   "darkest_share": 0.62
+  },
+  {
+   "en": "Kumamoto",
+   "ja": "熊本県",
+   "stars_per_km2": 3.217,
+   "darkest_share": 0.674
+  },
+  {
+   "en": "Gifu",
+   "ja": "岐阜県",
+   "stars_per_km2": 3.201,
+   "darkest_share": 0.661
+  },
+  {
+   "en": "Niigata",
+   "ja": "新潟県",
+   "stars_per_km2": 3.191,
+   "darkest_share": 0.594
+  },
+  {
+   "en": "Nagasaki",
+   "ja": "長崎県",
+   "stars_per_km2": 3.112,
+   "darkest_share": 0.581
+  },
+  {
+   "en": "Yamaguchi",
+   "ja": "山口県",
+   "stars_per_km2": 3.109,
+   "darkest_share": 0.592
+  },
+  {
+   "en": "Okayama",
+   "ja": "岡山県",
+   "stars_per_km2": 3.108,
+   "darkest_share": 0.63
+  },
+  {
+   "en": "Hiroshima",
+   "ja": "広島県",
+   "stars_per_km2": 3.073,
+   "darkest_share": 0.605
+  },
+  {
+   "en": "Okinawa",
+   "ja": "沖縄県",
+   "stars_per_km2": 3.057,
+   "darkest_share": 0.661
+  },
+  {
+   "en": "Fukui",
+   "ja": "福井県",
+   "stars_per_km2": 2.968,
+   "darkest_share": 0.498
+  },
+  {
+   "en": "Ishikawa",
+   "ja": "石川県",
+   "stars_per_km2": 2.958,
+   "darkest_share": 0.535
+  },
+  {
+   "en": "Gunma",
+   "ja": "群馬県",
+   "stars_per_km2": 2.932,
+   "darkest_share": 0.572
+  },
+  {
+   "en": "Yamanashi",
+   "ja": "山梨県",
+   "stars_per_km2": 2.919,
+   "darkest_share": 0.465
+  },
+  {
+   "en": "Nara",
+   "ja": "奈良県",
+   "stars_per_km2": 2.907,
+   "darkest_share": 0.609
+  },
+  {
+   "en": "Miyagi",
+   "ja": "宮城県",
+   "stars_per_km2": 2.714,
+   "darkest_share": 0.407
+  },
+  {
+   "en": "Toyama",
+   "ja": "富山県",
+   "stars_per_km2": 2.703,
+   "darkest_share": 0.449
+  },
+  {
+   "en": "Mie",
+   "ja": "三重県",
+   "stars_per_km2": 2.687,
+   "darkest_share": 0.473
+  },
+  {
+   "en": "Kyōto",
+   "ja": "京都府",
+   "stars_per_km2": 2.641,
+   "darkest_share": 0.421
+  },
+  {
+   "en": "Hyōgo",
+   "ja": "兵庫県",
+   "stars_per_km2": 2.562,
+   "darkest_share": 0.422
+  },
+  {
+   "en": "Shizuoka",
+   "ja": "静岡県",
+   "stars_per_km2": 2.493,
+   "darkest_share": 0.441
+  },
+  {
+   "en": "Tochigi",
+   "ja": "栃木県",
+   "stars_per_km2": 2.439,
+   "darkest_share": 0.358
+  },
+  {
+   "en": "Saga",
+   "ja": "佐賀県",
+   "stars_per_km2": 2.207,
+   "darkest_share": 0.098
+  },
+  {
+   "en": "Kagawa",
+   "ja": "香川県",
+   "stars_per_km2": 2.171,
+   "darkest_share": 0.194
+  },
+  {
+   "en": "Shiga",
+   "ja": "滋賀県",
+   "stars_per_km2": 1.976,
+   "darkest_share": 0.156
+  },
+  {
+   "en": "Ibaraki",
+   "ja": "茨城県",
+   "stars_per_km2": 1.591,
+   "darkest_share": 0.145
+  },
+  {
+   "en": "Fukuoka",
+   "ja": "福岡県",
+   "stars_per_km2": 1.395,
+   "darkest_share": 0.098
+  },
+  {
+   "en": "Tokyo",
+   "ja": "東京都",
+   "stars_per_km2": 1.362,
+   "darkest_share": 0.266
+  },
+  {
+   "en": "Aichi",
+   "ja": "愛知県",
+   "stars_per_km2": 1.334,
+   "darkest_share": 0.186
+  },
+  {
+   "en": "Saitama",
+   "ja": "埼玉県",
+   "stars_per_km2": 1.289,
+   "darkest_share": 0.171
+  },
+  {
+   "en": "Chiba",
+   "ja": "千葉県",
+   "stars_per_km2": 1.258,
+   "darkest_share": 0.049
+  },
+  {
+   "en": "Kanagawa",
+   "ja": "神奈川県",
+   "stars_per_km2": 0.768,
+   "darkest_share": 0.008
+  },
+  {
+   "en": "Ōsaka",
+   "ja": "大阪府",
+   "stars_per_km2": 0.365,
+   "darkest_share": 0.0
+  }
+ ]
+}
