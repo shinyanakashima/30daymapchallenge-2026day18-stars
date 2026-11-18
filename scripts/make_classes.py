@@ -4,6 +4,7 @@ Outputs
   data/processed/sky_class.png   uint8 grid, 15", 0 = not Japan land, 1-6 = class
   data/processed/meta.json       grid, thresholds, statistics
   site/data/sky_class.png        1/2 resolution lookup image for the web page
+                                 (R = class * 40, G = 255 where the sky is least lit)
   site/data/coastline.geojson    Japan outline (Natural Earth)
   site/data/prefectures.geojson  prefecture boundaries (Natural Earth)
   site/data/cities.geojson       main cities (Natural Earth)
@@ -112,7 +113,11 @@ def main():
     Image.fromarray(cls).save(OUT / "sky_class.png", optimize=True)
 
     # web lookup (every 2nd pixel, value*40 so it survives any 8-bit handling)
-    Image.fromarray((cls[::2, ::2] * 40).astype(np.uint8)).save(SITE / "sky_class.png", optimize=True)
+    least = (sky < C.LEAST_LIGHT_RAD) & land
+    rgb = np.zeros((h, w, 3), np.uint8)
+    rgb[..., 0] = cls * 40
+    rgb[..., 1] = least * 255
+    Image.fromarray(rgb[::2, ::2]).save(SITE / "sky_class.png", optimize=True)
 
     lat_c = C.BBOX["north"] - (np.arange(h) + 0.5) / C.PX_PER_DEG
     cell_km2 = (KM_PER_PX_LAT ** 2) * np.cos(np.radians(lat_c))[:, None] * np.ones((1, w))
@@ -155,7 +160,11 @@ def main():
                                  for p in (5, 25, 50, 75, 90, 95, 99)},
                 prefectures=prefs)
     (OUT / "meta.json").write_text(json.dumps(meta, ensure_ascii=False, indent=1))
+    least_share = round(float(cell_km2[least].sum() / total), 4)
+    meta["least_light"] = dict(max_rad=C.LEAST_LIGHT_RAD, share=least_share)
+    (OUT / "meta.json").write_text(json.dumps(meta, ensure_ascii=False, indent=1))
     site_meta = dict(year=C.YEAR, bbox=C.BBOX, lookup_px_per_deg=C.PX_PER_DEG / 2,
+                     least_light=meta["least_light"],
                      lookup_scale=40, classes=meta["classes"], stats=stats,
                      stars_per_km2_per_visible=C.STARS_PER_KM2_PER_VISIBLE)
     (SITE / "meta.json").write_text(json.dumps(site_meta, ensure_ascii=False, indent=1))

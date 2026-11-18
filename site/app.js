@@ -7,6 +7,10 @@
       lead: "Japan drawn only with stars. The darker the night around a place, the more stars it gets; bright cities become empty patches. Turn off the borders and names to see the coast and the cities emerge from the density of stars alone.",
       overlay: "Cities, coastline and prefecture borders",
       twinkle: "Twinkle",
+      highlight: "Highlight where stars are easiest to see",
+      highlightLeast: (p) => `Places with almost no night light: about ${p}% of Japan's land. Click a class in the legend to highlight it instead.`,
+      highlightClass: (c, p) => `Highlighting class ${c} (${p}% of Japan's land). Click it again to go back.`,
+      infoLeast: "One of the least-lit places in Japan (highlighted).",
       legendTitle: "Night-sky classes",
       legendHint: "Stars drawn per 10 × 10 km",
       placesTitle: "Places with many stars",
@@ -35,6 +39,10 @@
       lead: "日本を星だけで描きました。夜の明かりが少ない場所ほど星を多く、明るい街ほど少なく描いています。境界線と地名を消すと、星の濃淡だけで海岸線と街の位置が浮かび上がります。",
       overlay: "都市名・海岸線・都道府県境",
       twinkle: "瞬き",
+      highlight: "星がよく見える場所を強調",
+      highlightLeast: (p) => `夜の明かりがほとんどない場所（日本の陸地の約${p}%）を色付けしています。凡例の段階をクリックすると、その段階を強調します。`,
+      highlightClass: (c, p) => `段階${c}（陸地の${p}%）を強調しています。もう一度クリックすると元に戻ります。`,
+      infoLeast: "日本でも特に夜の明かりが少ない場所です（強調表示の範囲）。",
       legendTitle: "夜空の段階",
       legendHint: "10km四方に描いた星の数",
       placesTitle: "星が多い場所",
@@ -177,6 +185,7 @@
     ctx.drawImage(im, 0, 0);
     lookup = { data: ctx.getImageData(0, 0, im.width, im.height).data, w: im.width, h: im.height };
     render();
+    if (map.isStyleLoaded()) drawHighlight(); else map.once("load", drawHighlight);
   });
 
   function classAt(lng, lat) {
@@ -186,6 +195,76 @@
     const y = Math.floor((b.north - lat) * meta.lookup_px_per_deg);
     if (x < 0 || y < 0 || x >= lookup.w || y >= lookup.h) return 0;
     return Math.round(lookup.data[(y * lookup.w + x) * 4] / meta.lookup_scale);
+  }
+  function leastAt(lng, lat) {
+    const b = meta.bbox;
+    const x = Math.floor((lng - b.west) * meta.lookup_px_per_deg);
+    const y = Math.floor((b.north - lat) * meta.lookup_px_per_deg);
+    if (x < 0 || y < 0 || x >= lookup.w || y >= lookup.h) return false;
+    return lookup.data[(y * lookup.w + x) * 4 + 1] > 127;
+  }
+
+  // highlight layer: lookup grid reprojected to Web Mercator on a canvas
+  let hlTarget = "least"; // "least" or a class id
+  const hlCanvas = document.createElement("canvas");
+  const mercY = (lat) => Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI) / 360));
+  function drawHighlight() {
+    if (!lookup) return;
+    const b = meta.bbox;
+    const w = lookup.w;
+    const y0 = mercY(b.north), y1 = mercY(b.south);
+    const h = Math.round((w * (y0 - y1)) / (((b.east - b.west) * Math.PI) / 180));
+    const mask = document.createElement("canvas");
+    mask.width = w; mask.height = h;
+    const mctx = mask.getContext("2d");
+    const img = mctx.createImageData(w, h);
+    const d = lookup.data;
+    for (let r = 0; r < h; r++) {
+      const my = y0 - ((r + 0.5) / h) * (y0 - y1);
+      const lat = (2 * Math.atan(Math.exp(my)) - Math.PI / 2) * 180 / Math.PI;
+      const sr = Math.min(lookup.h - 1, Math.max(0, Math.floor((b.north - lat) * meta.lookup_px_per_deg)));
+      for (let c = 0; c < w; c++) {
+        const i = (sr * w + c) * 4;
+        const on = hlTarget === "least" ? d[i + 1] > 127 : Math.round(d[i] / meta.lookup_scale) === hlTarget;
+        if (on) {
+          const o = (r * w + c) * 4;
+          img.data[o] = 94; img.data[o + 1] = 230; img.data[o + 2] = 200; img.data[o + 3] = 255;
+        }
+      }
+    }
+    mctx.putImageData(img, 0, 0);
+    hlCanvas.width = w; hlCanvas.height = h;
+    const ctx = hlCanvas.getContext("2d");
+    ctx.clearRect(0, 0, w, h);
+    ctx.filter = "blur(2px)";
+    ctx.drawImage(mask, 0, 0);
+    ctx.filter = "none";
+    const coords = [[b.west, b.north], [b.east, b.north], [b.east, b.south], [b.west, b.south]];
+    const src = map.getSource("highlight");
+    if (!src) {
+      map.addSource("highlight", { type: "canvas", canvas: hlCanvas, coordinates: coords, animate: false });
+      map.addLayer({ id: "highlight", type: "raster", source: "highlight",
+        layout: { visibility: document.getElementById("highlight").checked ? "visible" : "none" },
+        paint: { "raster-opacity": 0.26, "raster-fade-duration": 0 } }, "twinkle-0");
+    } else {
+      src.play(); src.pause(); // redraw the canvas once
+    }
+  }
+  function setHighlight(on) {
+    if (map.getLayer("highlight")) map.setLayoutProperty("highlight", "visibility", on ? "visible" : "none");
+    renderHighlightNote();
+  }
+  function renderHighlightNote() {
+    const note = document.getElementById("highlight-note");
+    const on = document.getElementById("highlight").checked;
+    note.hidden = !on || !meta;
+    if (!on || !meta) return;
+    const t = T[lang];
+    note.textContent = hlTarget === "least"
+      ? t.highlightLeast(Math.round(meta.least_light.share * 100))
+      : t.highlightClass(hlTarget, (meta.stats[hlTarget - 1].share * 100).toFixed(1));
+    document.querySelectorAll("#legend li[data-class]").forEach((li) =>
+      li.classList.toggle("active", Number(li.dataset.class) === hlTarget));
   }
 
   function showInfo(lng, lat) {
@@ -203,6 +282,7 @@
       body.innerHTML = `<h3>${t.infoClass(c)} · ${t.classes[c - 1]}</h3>
         <p><span class="big">≈ ${fmt(n)}</span> ${t.infoDrawn}</p>
         <p>${t.infoBortle(k.bortle.replace("-", "–"), k.visible_range.replace("-", "–"))}</p>
+        ${leastAt(lng, lat) ? `<p class="least">${t.infoLeast}</p>` : ""}
         <p class="muted">${t.infoNote}</p>
         <p class="muted">${coord}</p>`;
     }
@@ -245,6 +325,17 @@
     if (meta) {
       meta.classes.forEach((k, i) => {
         const li = document.createElement("li");
+        li.dataset.class = k.id;
+        li.tabIndex = 0;
+        li.setAttribute("role", "button");
+        const pick = () => {
+          hlTarget = hlTarget === k.id ? "least" : k.id;
+          document.getElementById("highlight").checked = true;
+          drawHighlight();
+          setHighlight(true);
+        };
+        li.addEventListener("click", pick);
+        li.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(); } });
         const cv = document.createElement("canvas");
         drawSwatch(cv, k.visible / 1000 * 4);
         const name = document.createElement("span");
@@ -259,6 +350,7 @@
       hint.innerHTML = `<span class="hint">${t.legendHint}</span>`;
       legend.append(hint);
     }
+    renderHighlightNote();
 
     const ul = document.getElementById("places");
     ul.innerHTML = "";
@@ -306,6 +398,7 @@
     render();
   }));
   document.getElementById("overlay").addEventListener("change", (e) => setOverlay(e.target.checked));
+  document.getElementById("highlight").addEventListener("change", (e) => setHighlight(e.target.checked));
   map.on("load", () => setOverlay(document.getElementById("overlay").checked));
 
   // twinkling: three groups of bright stars pulse out of step

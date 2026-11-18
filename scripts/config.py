@@ -25,6 +25,8 @@ CLASSES = [
     dict(id=6, max_rad=float("inf"), bortle="8-9", visible=30, visible_range="20-50"),
 ]
 STARS_PER_KM2_PER_VISIBLE = 1 / 1000
+# "Least light" highlight on the page: blurred radiance below this value
+LEAST_LIGHT_RAD = 0.1
 
 TILE_ZOOMS = range(3, 11)  # z3-z10
 TILE_PX = 512  # served as 256 CSS px tiles (sharp on high-DPI screens)
