@@ -6,6 +6,7 @@
       title: "Where the light is null, the stars appear.",
       lead: "Japan drawn only with stars. The darker the night around a place, the more stars it gets; bright cities become empty patches. There are no place names: the coast and the cities show through the density of stars alone.",
       overlay: "Cities and coastline",
+      twinkle: "Twinkle",
       legendTitle: "Night-sky classes",
       legendHint: "Stars drawn per 10 × 10 km",
       placesTitle: "Places with many stars",
@@ -33,6 +34,7 @@
       title: "光がない場所に、星が現れる。",
       lead: "日本を星だけで描きました。夜の明かりが少ない場所ほど星を多く、明るい街ほど少なく描いています。地名はありません。星の濃淡だけで、海岸線と街の位置が浮かび上がります。",
       overlay: "都市名と海岸線",
+      twinkle: "瞬き",
       legendTitle: "夜空の段階",
       legendHint: "10km四方に描いた星の数",
       placesTitle: "星が多い場所",
@@ -99,10 +101,20 @@
           attribution: "Night lights: <a href=\"https://blackmarble.gsfc.nasa.gov/\" target=\"_blank\" rel=\"noopener\">NASA Black Marble</a> · <a href=\"https://www.naturalearthdata.com/\" target=\"_blank\" rel=\"noopener\">Natural Earth</a>",
         },
         coast: { type: "geojson", data: "data/coastline.geojson" },
+        twinkle: { type: "geojson", data: "tiles/twinkle.geojson" },
       },
       layers: [
         { id: "bg", type: "background", paint: { "background-color": "#000" } },
         { id: "stars", type: "raster", source: "stars", paint: { "raster-fade-duration": 200, "raster-resampling": "linear" } },
+        ...[0, 1, 2].map((g) => ({
+          id: `twinkle-${g}`, type: "circle", source: "twinkle", filter: ["==", ["get", "g"], g],
+          paint: {
+            "circle-color": ["get", "c"],
+            "circle-radius": ["interpolate", ["linear"], ["zoom"], 3, ["*", 0.9, ["get", "s"]], 6, ["*", 1.6, ["get", "s"]], 8, ["*", 3.2, ["get", "s"]], 10, ["*", 5, ["get", "s"]]],
+            "circle-blur": 0.85,
+            "circle-opacity": 0.6,
+          },
+        })),
         { id: "coast", type: "line", source: "coast", layout: { visibility: "none" },
           paint: { "line-color": "#9fb4ff", "line-opacity": 0.28, "line-width": 0.6 } },
       ],
@@ -279,6 +291,24 @@
   }));
   document.getElementById("overlay").addEventListener("change", (e) => setOverlay(e.target.checked));
   map.on("load", () => setOverlay(document.getElementById("overlay").checked));
+
+  // twinkling: three groups of bright stars pulse out of step
+  const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let twinkleOn = !still;
+  const twinkleBox = document.getElementById("twinkle");
+  twinkleBox.checked = twinkleOn;
+  twinkleBox.addEventListener("change", (e) => { twinkleOn = e.target.checked; });
+  let lastFrame = 0;
+  function twinkle(t) {
+    requestAnimationFrame(twinkle);
+    if (t - lastFrame < 50 || !map.isStyleLoaded()) return;
+    lastFrame = t;
+    [0, 1, 2].forEach((g) => {
+      const o = twinkleOn ? 0.15 + 0.85 * Math.pow(0.5 + 0.5 * Math.sin(t / (700 + 230 * g) + g * 2.1), 2) : 0;
+      map.setPaintProperty(`twinkle-${g}`, "circle-opacity", o);
+    });
+  }
+  map.on("load", () => requestAnimationFrame(twinkle));
 
   render();
 })();
